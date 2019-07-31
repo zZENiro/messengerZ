@@ -6,6 +6,8 @@ LoginPlatform::LoginPlatform(QWidget *parent) :
     ui(new Ui::LoginPlatform)
 {
     ui->setupUi(this);
+
+
 }
 
 LoginPlatform::~LoginPlatform()
