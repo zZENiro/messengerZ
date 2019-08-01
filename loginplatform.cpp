@@ -14,7 +14,27 @@ LoginPlatform::LoginPlatform(QWidget *parent) :
     settingsForUi();
 
 
+    connect(this->conn, SIGNAL(giveSettings(QSettings&)),
+            this, SLOT(readSettings(QSettings&)));
+    connect(ui->LogBtn, SIGNAL(clicked()), this, SLOT(connecting()));
+}
 
+void LoginPlatform::connecting()
+{
+    if (!this->IPadress.isEmpty() && !this->port.isEmpty()
+            && !this->Login.isEmpty() && !this->password.isEmpty())
+    {
+        conn = new DialogConn(this);
+        conn->show();
+        conn->toConnect(this->IPadress, this->port);
+        conn->setData(this->Login, this->password);
+        conn->exec();
+    }
+}
+
+void LoginPlatform::readSettings(QSettings& st)
+{
+    this->sysSettings = new QSettings(st);
 }
 
 void LoginPlatform::settingsForUi()
@@ -289,7 +309,17 @@ void LoginPlatform::on_ip_4th_textChanged(const QString&)
     IPadress = IPadress_1 + "." + IPadress_2 + "." + IPadress_3 + "." + IPadress_4;
 }
 
-void LoginPlatform::on_passEdit_6_textChanged(const QString&)
+void LoginPlatform::on_portEdit_textChanged(const QString &)
 {
-    port = ui->port_lbl->text();
+    this->port = ui->portEdit->text();
+}
+
+void LoginPlatform::on_LogEdit_textChanged(const QString &)
+{
+    this->Login = ui->LogEdit->text();
+}
+
+void LoginPlatform::on_passEdit_textChanged(const QString &)
+{
+    this->password = ui->passEdit->text();
 }
