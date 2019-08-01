@@ -4,12 +4,16 @@
 #include <QKeyEvent>
 #include <QDialog>
 
+// client
+
 LoginPlatform::LoginPlatform(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::LoginPlatform)
 {
     ui->setupUi(this);
     settingsForUi();
+
+
 
 }
 
@@ -27,13 +31,6 @@ void LoginPlatform::settingsForUi()
     ui->ip_2nd->setValidator(validator);
     ui->ip_3rd->setValidator(validator);
     ui->ip_4th->setValidator(validator);
-
-
-}
-
-LoginPlatform::~LoginPlatform()
-{
-    delete ui;
 }
 
 bool LoginPlatform::eventFilter(QObject *target, QEvent *kevent)
@@ -245,3 +242,54 @@ bool LoginPlatform::eventFilter(QObject *target, QEvent *kevent)
     return QMainWindow::eventFilter(target, kevent);
 }
 
+LoginPlatform::~LoginPlatform()
+{
+    delete ui;
+}
+
+void LoginPlatform::on_ip_1st_textChanged(const QString&)
+{
+    IPadress_1 = ui->ip_1st->text();
+    IPadress = IPadress_1 + "." + IPadress_2 + "." + IPadress_3 + "." + IPadress_4;
+    if(ui->ip_1st->text().size() == 3 &&
+            ui->ip_1st->text().size() == ui->ip_1st->cursorPosition())
+    {
+        ui->ip_2nd->setFocus();
+        ui->ip_2nd->selectAll();
+    }
+}
+
+void LoginPlatform::on_ip_2nd_textChanged(const QString&)
+{
+    IPadress_2 = ui->ip_2nd->text();
+    IPadress = IPadress_1 + "." + IPadress_2 + "." + IPadress_3 + "." + IPadress_4;
+    if(ui->ip_2nd->text().size() == 3 &&
+            ui->ip_2nd->text().size() == ui->ip_2nd->cursorPosition())
+    {
+        ui->ip_3rd->setFocus();
+        ui->ip_3rd->selectAll();
+    }
+}
+
+void LoginPlatform::on_ip_3rd_textChanged(const QString&)
+{
+    IPadress_3 = ui->ip_3rd->text();
+    IPadress = IPadress_1 + "." + IPadress_2 + "." + IPadress_3 + "." + IPadress_4;
+    if(ui->ip_3rd->text().size() == 3 &&
+            ui->ip_3rd->text().size() == ui->ip_3rd->cursorPosition())
+    {
+        ui->ip_4th->setFocus();
+        ui->ip_4th->selectAll();
+    }
+}
+
+void LoginPlatform::on_ip_4th_textChanged(const QString&)
+{
+    IPadress_4 = ui->ip_4th->text();
+    IPadress = IPadress_1 + "." + IPadress_2 + "." + IPadress_3 + "." + IPadress_4;
+}
+
+void LoginPlatform::on_passEdit_6_textChanged(const QString&)
+{
+    port = ui->port_lbl->text();
+}

@@ -15,6 +15,13 @@ class LoginPlatform : public QMainWindow
     QTcpSocket* sock;
     quint16 _nextBlockSize;
     QSettings sysSettings;
+    QString IPadress;
+    QString port;
+    QString IPadress_1;
+    QString IPadress_2;
+    QString IPadress_3;
+    QString IPadress_4;
+
     void settingsForUi();
 
 public:
@@ -23,6 +30,17 @@ public:
 
 protected:
     bool eventFilter(QObject* trgt, QEvent* ev);
+
+private slots:
+    void on_ip_1st_textChanged(const QString &arg1);
+
+    void on_ip_2nd_textChanged(const QString &arg1);
+
+    void on_ip_3rd_textChanged(const QString &arg1);
+
+    void on_ip_4th_textChanged(const QString &arg1);
+
+    void on_passEdit_6_textChanged(const QString &arg1);
 
 private:
     Ui::LoginPlatform *ui;
