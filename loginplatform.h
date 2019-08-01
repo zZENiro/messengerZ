@@ -14,11 +14,15 @@ class LoginPlatform : public QMainWindow
     Q_OBJECT
     QTcpSocket* sock;
     quint16 _nextBlockSize;
-    QSettings setts;
+    QSettings sysSettings;
+    void settingsForUi();
 
 public:
     explicit LoginPlatform(QWidget *parent = nullptr);
     ~LoginPlatform();
+
+protected:
+    bool eventFilter(QObject* trgt, QEvent* ev);
 
 private:
     Ui::LoginPlatform *ui;
