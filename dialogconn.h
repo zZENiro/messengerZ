@@ -15,6 +15,14 @@ class DialogConn : public QDialog
 {
     Q_OBJECT
     QTcpSocket* sock;
+    QString *login;
+    QString *password;
+    quint16 _nextBlockSize;
+
+public slots:
+    void getDataFromServer();
+//    void getFromServerError();
+    void emitQuestToServer();
 
 signals:
     void giveSettings(QSettings&);
@@ -25,13 +33,7 @@ public:
     void toConnect(QString& adress, QString& port);
     void setData(QString& log, QString& pass);
 
-public slots:
-    void getFromServerData(QSettings&);
-    void getFromServerError();
-
-
     ~DialogConn();
-
 private:
     Ui::DialogConn *ui;
 };

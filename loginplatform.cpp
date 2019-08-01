@@ -13,7 +13,7 @@ LoginPlatform::LoginPlatform(QWidget *parent) :
     ui->setupUi(this);
     settingsForUi();
 
-
+    conn = new DialogConn(this);
     connect(this->conn, SIGNAL(giveSettings(QSettings&)),
             this, SLOT(readSettings(QSettings&)));
     connect(ui->LogBtn, SIGNAL(clicked()), this, SLOT(connecting()));
@@ -24,17 +24,17 @@ void LoginPlatform::connecting()
     if (!this->IPadress.isEmpty() && !this->port.isEmpty()
             && !this->Login.isEmpty() && !this->password.isEmpty())
     {
-        conn = new DialogConn(this);
         conn->show();
         conn->toConnect(this->IPadress, this->port);
         conn->setData(this->Login, this->password);
         conn->exec();
     }
+
 }
 
 void LoginPlatform::readSettings(QSettings& st)
 {
-    this->sysSettings = new QSettings(st);
+    this->sysSettings = &st;
 }
 
 void LoginPlatform::settingsForUi()

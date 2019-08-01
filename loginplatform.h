@@ -15,8 +15,7 @@ class LoginPlatform : public QMainWindow
     Q_OBJECT
     QTcpSocket* sock;
 
-    quint16 _nextBlockSize;
-    QSettings sysSettings;
+    QSettings* sysSettings;
     QString Login;
     QString password;
 
@@ -30,7 +29,7 @@ class LoginPlatform : public QMainWindow
 
     void settingsForUi();
 
-private slots:
+public slots:
     void connecting();
     void readSettings(QSettings&);
 
