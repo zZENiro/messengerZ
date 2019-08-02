@@ -38,6 +38,8 @@ void LoginPlatform::readSettings(Person& prs)
     // Этот метод должен получать объект Типа Person (for exmpl)
     //
 
+    _person = new Person(prs);
+
     // Настройки
     /*
      * Фото профиля

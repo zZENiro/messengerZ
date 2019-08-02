@@ -27,6 +27,8 @@ class LoginPlatform : public QMainWindow
     QString IPadress_4;
     DialogConn* conn;
 
+    Person* person;
+
     void settingsForUi();
 
 public slots:
