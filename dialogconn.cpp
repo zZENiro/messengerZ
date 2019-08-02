@@ -1,18 +1,35 @@
 #include "dialogconn.h"
 #include "ui_dialogconn.h"
 
+
 DialogConn::DialogConn(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::DialogConn),
-    _nextBlockSize(0)
+    _nextBlockSize(0),
+    ui(new Ui::DialogConn)
 {
     ui->setupUi(this);
+
+    this->setWindowFlag(Qt::WindowType::Popup, true);
 
     sock = new QTcpSocket;
     connect(sock, SIGNAL(connected()), this, SLOT(emitQuestToServer()));
     connect(sock, SIGNAL(readyRead() ), SLOT(getDataFromServer()));
-    connect(sock, SIGNAL(error(QAЬstractSocket::SocketError)),
-            this, SLOT(getFromServerError()));
+    connect(sock, SIGNAL(error(QAbstractSocket::SocketError)),
+            this, SLOT(getFromServerError(QAbstractSocket::SocketError)));
+}
+
+void DialogConn::getFromServerError(QAbstractSocket::SocketError err)
+{
+    QString strError =
+    "Error: "+ (err == QAbstractSocket::HostNotFoundError?
+    "The host was not found." :
+    err == QAbstractSocket::RemoteHostClosedError?
+    "The remote host is closed." :
+                        err == QAbstractSocket::ConnectionRefusedError?
+                        "The connection was refused." :
+                        QString(sock->errorString())
+                        ) ;
+                        ui->StateChecker->setText(strError);
 }
 
 void DialogConn::getDataFromServer()
@@ -20,6 +37,7 @@ void DialogConn::getDataFromServer()
     // получаю объект класса QSettings и вызываю сигнал
     // giveSettings(QSettings&) который передаёт этот объект
     // для основного виджета
+    Person person;
 
     QDataStream in(sock);
     for(;;)
@@ -35,13 +53,10 @@ void DialogConn::getDataFromServer()
         if (sock->bytesAvailable() < this->_nextBlockSize){
             break;
         }
-
-        bool ErrorState;
-
-
+        in >> person;
     }
 
-    // emit GiveSettings(Person& obj)
+    emit giveSettings(person);
 }
 
 void DialogConn::emitQuestToServer()

@@ -16,10 +16,10 @@
   <widget class="QLabel" name="StateChecker">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>50</y>
-     <width>101</width>
-     <height>31</height>
+     <x>10</x>
+     <y>40</y>
+     <width>201</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="font">

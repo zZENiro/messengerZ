@@ -6,7 +6,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QSettings>
-
+#include <QAbstractSocket>
 #include "person.h"
 
 namespace Ui {
@@ -23,7 +23,7 @@ class DialogConn : public QDialog
 
 public slots:
     void getDataFromServer();
-//    void getFromServerError();
+    void getFromServerError(QAbstractSocket::SocketError err);
     void emitQuestToServer();
 
 signals:
