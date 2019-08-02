@@ -28,11 +28,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
     loginplatform.cpp \
-    dialogconn.cpp
+    dialogconn.cpp \
+    person.cpp
 
 HEADERS += \
         loginplatform.h \
-    dialogconn.h
+    dialogconn.h \
+    person.h
 
 FORMS += \
         loginplatform.ui \

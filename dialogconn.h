@@ -7,6 +7,8 @@
 #include <QDataStream>
 #include <QSettings>
 
+#include "person.h"
+
 namespace Ui {
 class DialogConn;
 }
@@ -25,7 +27,7 @@ public slots:
     void emitQuestToServer();
 
 signals:
-    void giveSettings(QSettings&);
+    void giveSettings(Person&);
 
 public:
     explicit DialogConn(QWidget *parent = nullptr);

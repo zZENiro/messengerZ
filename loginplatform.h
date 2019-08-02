@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include <QSettings>
 #include "dialogconn.h"
+#include "person.h"
 
 namespace Ui {
 class LoginPlatform;
@@ -15,7 +16,6 @@ class LoginPlatform : public QMainWindow
     Q_OBJECT
     QTcpSocket* sock;
 
-    QSettings* sysSettings;
     QString Login;
     QString password;
 
@@ -31,7 +31,7 @@ class LoginPlatform : public QMainWindow
 
 public slots:
     void connecting();
-    void readSettings(QSettings&);
+    void readSettings(Person&); // Вместо QSettings => Person
 
 public:
     explicit LoginPlatform(QWidget *parent = nullptr);
@@ -41,19 +41,19 @@ protected:
     bool eventFilter(QObject* trgt, QEvent* ev);
 
 private slots:
-    void on_ip_1st_textChanged(const QString &);
+    void on_ip_1st_textChanged(const QString&);
 
-    void on_ip_2nd_textChanged(const QString &);
+    void on_ip_2nd_textChanged(const QString&);
 
-    void on_ip_3rd_textChanged(const QString &);
+    void on_ip_3rd_textChanged(const QString&);
 
-    void on_ip_4th_textChanged(const QString &);
+    void on_ip_4th_textChanged(const QString&);
 
-    void on_portEdit_textChanged(const QString &);
+    void on_portEdit_textChanged(const QString&);
 
-    void on_LogEdit_textChanged(const QString &arg1);
+    void on_LogEdit_textChanged(const QString&);
 
-    void on_passEdit_textChanged(const QString &arg1);
+    void on_passEdit_textChanged(const QString&);
 
 private:
     Ui::LoginPlatform *ui;

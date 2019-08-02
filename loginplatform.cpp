@@ -4,6 +4,7 @@
 #include <QKeyEvent>
 #include <QDialog>
 
+
 // client
 
 LoginPlatform::LoginPlatform(QWidget *parent) :
@@ -14,8 +15,8 @@ LoginPlatform::LoginPlatform(QWidget *parent) :
     settingsForUi();
 
     conn = new DialogConn(this);
-    connect(this->conn, SIGNAL(giveSettings(QSettings&)),
-            this, SLOT(readSettings(QSettings&)));
+    connect(this->conn, SIGNAL(giveSettings(Person&)),
+            this, SLOT(readSettings(Person&)));
     connect(ui->LogBtn, SIGNAL(clicked()), this, SLOT(connecting()));
 }
 
@@ -32,9 +33,18 @@ void LoginPlatform::connecting()
 
 }
 
-void LoginPlatform::readSettings(QSettings& st)
+void LoginPlatform::readSettings(Person& prs)
 {
-    this->sysSettings = &st;
+    // Этот метод должен получать объект Типа Person (for exmpl)
+    //
+
+    // Настройки
+    /*
+     * Фото профиля
+     * История сообщений
+     * Никнейм
+     * Email/phone number...
+     */
 }
 
 void LoginPlatform::settingsForUi()

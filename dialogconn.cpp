@@ -3,12 +3,16 @@
 
 DialogConn::DialogConn(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::DialogConn)
+    ui(new Ui::DialogConn),
+    _nextBlockSize(0)
 {
     ui->setupUi(this);
 
     sock = new QTcpSocket;
     connect(sock, SIGNAL(connected()), this, SLOT(emitQuestToServer()));
+    connect(sock, SIGNAL(readyRead() ), SLOT(getDataFromServer()));
+    connect(sock, SIGNAL(error(QAЬstractSocket::SocketError)),
+            this, SLOT(getFromServerError()));
 }
 
 void DialogConn::getDataFromServer()
@@ -17,8 +21,27 @@ void DialogConn::getDataFromServer()
     // giveSettings(QSettings&) который передаёт этот объект
     // для основного виджета
 
+    QDataStream in(sock);
+    for(;;)
+    {
+        if(!this->_nextBlockSize)
+        {
+            if(sock->bytesAvailable() < sizeof(quint16))
+            {
+                break;
+            }
+            in >> this->_nextBlockSize;
+        }
+        if (sock->bytesAvailable() < this->_nextBlockSize){
+            break;
+        }
 
-    // emit GiveSettings(settings)
+        bool ErrorState;
+
+
+    }
+
+    // emit GiveSettings(Person& obj)
 }
 
 void DialogConn::emitQuestToServer()
@@ -26,7 +49,15 @@ void DialogConn::emitQuestToServer()
     qDebug() << "connected!";
     // нужно запросить сервер на существование Логина и Пароля в БД на нём.
 
+    QByteArray info;
+    QDataStream out(&info, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Version::Qt_5_12);
+    out << quint16(0) << this->login << this->password;
 
+    out.device()->seek(0);
+    out << quint16(info.size() - sizeof(quint16));
+
+    sock->write(info);
 }
 
 void DialogConn::toConnect(QString &adress, QString &port)
