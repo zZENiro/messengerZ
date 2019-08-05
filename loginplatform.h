@@ -20,7 +20,7 @@ class LoginPlatform : public QMainWindow
     QString password;
 
     QString IPadress;
-    QString port;
+    quint16 port = 0;
     QString IPadress_1;
     QString IPadress_2;
     QString IPadress_3;
@@ -56,6 +56,8 @@ private slots:
     void on_LogEdit_textChanged(const QString&);
 
     void on_passEdit_textChanged(const QString&);
+
+    void on_checkBox_stateChanged(int arg1);
 
 private:
     Ui::LoginPlatform *ui;

@@ -11,11 +11,12 @@ DialogConn::DialogConn(QWidget *parent) :
 
     this->setWindowFlag(Qt::WindowType::Popup, true);
 
-    sock = new QTcpSocket;
+    sock = new QTcpSocket(this);
     connect(sock, SIGNAL(connected()), this, SLOT(emitQuestToServer()));
     connect(sock, SIGNAL(readyRead() ), SLOT(getDataFromServer()));
     connect(sock, SIGNAL(error(QAbstractSocket::SocketError)),
             this, SLOT(getFromServerError(QAbstractSocket::SocketError)));
+    connect(ui->close, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 void DialogConn::getFromServerError(QAbstractSocket::SocketError err)
@@ -30,17 +31,15 @@ void DialogConn::getFromServerError(QAbstractSocket::SocketError err)
                         QString(sock->errorString())
                         ) ;
                         ui->StateChecker->setText(strError);
+                        sock->flush();
+
+                        sock->disconnectFromHost();
 }
 
 void DialogConn::getDataFromServer()
 {
-    // получаю объект класса QSettings и вызываю сигнал
-    // giveSettings(QSettings&) который передаёт этот объект
-    // для основного виджета
-    Person person;
-
     QDataStream in(sock);
-    for(;;)
+    for(; ;)
     {
         if(!this->_nextBlockSize)
         {
@@ -53,21 +52,53 @@ void DialogConn::getDataFromServer()
         if (sock->bytesAvailable() < this->_nextBlockSize){
             break;
         }
-        in >> person;
+        in >> person >> registrationNeeded >> _badPassword;
     }
+    qDebug() << registrationNeeded;
+    Registration(registrationNeeded);
+    badPassword(_badPassword);
+}
 
-    emit giveSettings(person);
+void DialogConn::Registration(bool state)
+{
+    if (state)
+    {
+        // форма регистрации
+        // формой инициализирую объект person
+        // и отсылаю на сервер для добавления в БД
+        qDebug() << "reggg!";
+        //registrationForServer();
+        registrationNeeded = false;
+    } else {
+        // если регистрация не нужна, подключаем пользователя к клиенту
+        // и используем настройки Person для персонализации рабочего стола
+        return;
+    }
+}
+
+void DialogConn::badPassword(bool state)
+{
+    if (state)
+    {
+        // выдаём ошибку о wrong password
+        qDebug() << "Wrong password";
+        _badPassword = false;
+    }
+    else {
+        // включаем клиент
+    }
 }
 
 void DialogConn::emitQuestToServer()
 {
     qDebug() << "connected!";
+    ui->StateChecker->setText("Connected to server: " + sock->peerName());
     // нужно запросить сервер на существование Логина и Пароля в БД на нём.
 
     QByteArray info;
     QDataStream out(&info, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Version::Qt_5_12);
-    out << quint16(0) << this->login << this->password;
+    out << quint16(0) << *this->login << *this->password << this->person;
 
     out.device()->seek(0);
     out << quint16(info.size() - sizeof(quint16));
@@ -75,10 +106,11 @@ void DialogConn::emitQuestToServer()
     sock->write(info);
 }
 
-void DialogConn::toConnect(QString &adress, QString &port)
+void DialogConn::toConnect(QString adress, quint16 port)
 {
-    qDebug() << "IP: " + adress + "port: " + port;
-    sock->connectToHost(adress, (uint16_t)port.toInt());
+
+    qDebug() << "IP: " + adress + "port: " + QString::number(port);
+    sock->connectToHost(adress, port);
 }
 
 void DialogConn::setData(QString &log, QString &pass)
