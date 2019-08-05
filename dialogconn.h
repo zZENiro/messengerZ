@@ -19,20 +19,23 @@ class DialogConn : public QDialog
     QTcpSocket* sock;
     QString *login;
     QString *password;
+    Person person;
+    bool registrationNeeded = false;
+    bool _badPassword = false;
     quint16 _nextBlockSize;
+
+    void Registration(bool);
+    void badPassword(bool);
 
 public slots:
     void getDataFromServer();
     void getFromServerError(QAbstractSocket::SocketError err);
     void emitQuestToServer();
 
-signals:
-    void giveSettings(Person&);
-
 public:
     explicit DialogConn(QWidget *parent = nullptr);
 
-    void toConnect(QString& adress, QString& port);
+    void toConnect(QString adress, quint16 port);
     void setData(QString& log, QString& pass);
 
     ~DialogConn();

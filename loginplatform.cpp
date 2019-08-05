@@ -15,14 +15,14 @@ LoginPlatform::LoginPlatform(QWidget *parent) :
     settingsForUi();
 
     conn = new DialogConn(this);
-    connect(this->conn, SIGNAL(giveSettings(Person&)),
-            this, SLOT(readSettings(Person&)));
+//    connect(this->conn, SIGNAL(giveSettings(Person&)),
+//            this, SLOT(readSettings(Person&)));
     connect(ui->LogBtn, SIGNAL(clicked()), this, SLOT(connecting()));
 }
 
 void LoginPlatform::connecting()
 {
-    if (!this->IPadress.isEmpty() && !this->port.isEmpty()
+    if (!this->IPadress.isEmpty() && this->port != 0
             && !this->Login.isEmpty() && !this->password.isEmpty())
     {
         conn->show();
@@ -30,7 +30,6 @@ void LoginPlatform::connecting()
         conn->setData(this->Login, this->password);
         conn->exec();
     }
-
 }
 
 void LoginPlatform::readSettings(Person& prs)
@@ -323,7 +322,7 @@ void LoginPlatform::on_ip_4th_textChanged(const QString&)
 
 void LoginPlatform::on_portEdit_textChanged(const QString &)
 {
-    this->port = ui->portEdit->text();
+    this->port = ui->portEdit->text().toInt();
 }
 
 void LoginPlatform::on_LogEdit_textChanged(const QString &)
@@ -334,4 +333,21 @@ void LoginPlatform::on_LogEdit_textChanged(const QString &)
 void LoginPlatform::on_passEdit_textChanged(const QString &)
 {
     this->password = ui->passEdit->text();
+}
+
+void LoginPlatform::on_checkBox_stateChanged(int checkState)
+{
+    if(checkState == Qt::Checked) {
+        ui->ip_1st->setEnabled(false);
+        ui->ip_2nd->setEnabled(false);
+        ui->ip_3rd->setEnabled(false);
+        ui->ip_4th->setEnabled(false);
+        this->IPadress = "localhost";
+    } else if (checkState == Qt::CheckState::Unchecked) {
+        ui->ip_1st->setEnabled(true);
+        ui->ip_2nd->setEnabled(true);
+        ui->ip_3rd->setEnabled(true);
+        ui->ip_4th->setEnabled(true);
+        this->IPadress =  IPadress_1 + "." + IPadress_2 + "." + IPadress_3 + "." + IPadress_4;
+    }
 }
